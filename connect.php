@@ -17,7 +17,7 @@
     //   } else {
     //     die(error($connectdb));
     //   }
-  
+
 
   try {
     $db = new PDO ($dsn,DBUSER, DBPASS);

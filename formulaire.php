@@ -24,21 +24,19 @@ $authors = $query->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
   </head>
-  <body>
+    <body>
 
+        <div class="container my-5">
 
-    <div class="container my-5">
-
-
-    <?php
-          if(!empty($_SESSION['erreur'])){
+            <?php
+            if(!empty($_SESSION['erreur'])){
               echo '<div class="alert alert-danger" role="alert">
                 '. $_SESSION['erreur'].'
                   </div>';
               $_SESSION['erreur'] = "";
-          }
+            }
 
-          ?>
+            ?>
 
     <h1>AJOUT UN LIVRE</h1>
     <form action="addbook.php" method="POST">
