@@ -2,7 +2,7 @@
 <?php
 session_start();
 
-  // cette fonction permet d'inclure un fichier une seule fois
+  // 
   require_once ('connect.php');
 
   $reqsql="select b.*, a.lastname from book b left join author a on a.id=b.author_id";
@@ -31,8 +31,8 @@ session_start();
   <body>
     
         <div class="container">
-            <button class="btn btn-primary my-5"><a href="formulaire.php" class="text-light">Ajouter un livre</a>
-            </button>
+            <button class="btn btn-primary my-5"><a href="formulaire.php" class="text-light">Ajouter un livre</a></button>
+            
 
           <?php
           if(!empty($_SESSION['erreur'])){
@@ -74,7 +74,7 @@ session_start();
                   <td><?= $book['title'] ?></td>
                   <td><?= $book['date_publi'] ?></td>
                   <td><?= $book['lastname'] ?></td>
-                  <td><a href="lister.php?id=<?= $book['id'] ?>">Voir</a></td>
+                  <td><a href="details.php?id=<?= $book['id'] ?>">Voir</a></td>
                   <td><a href="edit.php?id=<?= $book['id'] ?>">Modifier</a></td>
                   <td><a href="delet.php?id=<?= $book['id'] ?>">Supprimer</a></td>
                 </tr>

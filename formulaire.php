@@ -4,7 +4,7 @@ require_once ('connect.php');
 
 $reqsql = "SELECT * FROM author";
 //$authors = $db->query($reqsql);
-//$reqsql="select b.*, a.lastname from book b left join author a on a.id=b.author_id";
+//$reqsql='select b.*, a.lastname from book b left join author a on a.id=b.author_id';
 $query = $db->prepare($reqsql);
 $query->execute();
 $authors = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -38,7 +38,7 @@ $authors = $query->fetchAll(PDO::FETCH_ASSOC);
 
             ?>
 
-    <h1>AJOUT UN LIVRE</h1>
+    <h1>AJOUTER UN LIVRE</h1>
     <form action="addbook.php" method="POST">
 
         <div class="form-group my-3">

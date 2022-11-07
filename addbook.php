@@ -4,33 +4,38 @@
 session_start();
 
 if($_POST){
-    if(isset($_POST['title']) && !empty($_POST['litle'])
+    if(isset($_POST['title']) && !empty($_POST['title'])
     && isset($_POST['date_publi']) && !empty($_POST['date_publi'])
     && isset($_POST['author_id']) && !empty($_POST['author_id'])){
-
+      //
       require_once ('connect.php');
 
       $title = strip_tags($_POST['title']);
       $date_publi = strip_tags($_POST['date_publi']);
       $author_id = strip_tags($_POST['author_id']);
 
-      $reqsql="INSERT INTO book (author_id, title, date_publi) VALUES ($author_id, '$title', '$date_publi')";
+      $reqsql="INSERT INTO book (author_id, title, date_publi) VALUES (:author_id, :title, :date_publi)";
+      
       $query = $db->prepare($reqsql);
 
-      $query->bindValue(':title',$title,PDO::PARAM_STR);
-      $query->bindValue(':date_publi',$date_publi,PDO::PARAM_STR);
-      $query->bindValue(':author_id',$author_id,PDO::PARAM_INT);
+       $query->bindValue(':title',$title,PDO::PARAM_STR);
+       $query->bindValue(':date_publi',$date_publi,PDO::PARAM_STR);
+       $query->bindValue(':author_id',$author_id,PDO::PARAM_INT);
+      //$query->bindValue(':id',$id,PDO::PARAM_INT);
       $query->execute();
 
       $_SESSION ['message'] = "Livre ajouté";
-
-    //$book = $query->fetch();
+      //var_dump($reqsql);
+      //die();
+      //$book = $query->fetch();
 
       require_once ('deconnect.php');
 
       header('Location: index.php');
 
     }else{
+    //var_dump();
+    //die();
       $_SESSION['erreur'] = " Le formulaire est incomplet";
     }
 
@@ -51,6 +56,7 @@ if($_POST){
 
   </head>
     <body>
-
+    <h1>Ajouter des livres</h1>
+    <p><?php echo 'ajout ok'; ?></p>
     </body>
 </html>

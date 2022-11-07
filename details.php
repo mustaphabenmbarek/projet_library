@@ -8,9 +8,11 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
     require_once ('connect.php');
 
     $id = strip_tags($_GET['id']);
+   // $author_id = strip_tags($_GET['author_id']);
 
-    $reqsql='SELECT * FROM book WHERE `id` = :id;';
-    //$reqsql="select b.*, a.lastname from book b left join author a on a.id=b.author_id"; 
+   //$reqsql='SELECT * FROM book WHERE `id` = :id;';
+   // $reqsql= 'select b.*, author.lastname as lastname from book b left join author on `author_id` = :id ;';
+    $reqsql='select b.*, a.lastname from book b left join author a on a.id=b.author_id WHERE b.`id`= :id;';
 
     $query = $db->prepare($reqsql);
     $query->bindValue(':id',$id,PDO::PARAM_INT);
@@ -50,24 +52,10 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
                     <h1> Détails du livre : </h1>
                     <p>ID : <?=$book['id'] ?></p>
                     <p>Titre du livre : <?=$book['title'] ?></p>
-                    <p>Date publication : <?=$book['date_publi'] ?></p>       
+                    <p>Date publication : <?=$book['date_publi'] ?></p>
                     
-                    <select name="author_id">
-                    <?php
-                
-                    foreach ($authors as $author) {
-                        echo '<option value="' . $author['id'] . '"';
-                        
-                        if ($author['id'] === $book['author_id']) {
-                            echo ' selected';
-                        }
-        
-                        echo '>' . $author['firstname'] . '</option>';
-                        
-                    }
-                    ?>
-                    <p>Nom auteur : <?=$author['lastname'] ?></p>
-                    </select>
+                    <p>Nom auteur : <?=$book['lastname'] ?></p>
+
                     
                     <p><a href="index.php"></a></p>
                 </section>
