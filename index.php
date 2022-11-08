@@ -5,15 +5,41 @@ session_start();
   // 
   require_once ('connect.php');
 
-  $reqsql="select b.*, a.lastname from book b left join author a on a.id=b.author_id";
+  $reqsql="select b.*, a.lastname from book b left join author a on a.id=b.author_id WHERE 1";
   
+  if (!empty($_POST)) {
+    if (!empty($_POST['title'])) {
+      $reqsql .= " AND b.title LIKE :title";
+    }
+
+    if (!empty($_POST['author_id'])) {
+      $reqsql .= " AND b.author_id = :author_id";
+    }
+  }
+
   $query = $db->prepare($reqsql);
+  
+  if (!empty($_POST)) {
+    if (!empty($_POST['author_id'])) {
+      $query->bindValue(':author_id', $_POST['author_id'], PDO::PARAM_INT);
+    }
+
+    if (!empty($_POST['title'])) {
+      $query->bindValue(':title', '%'.$_POST['title'].'%', PDO::PARAM_STR);
+    }
+  }
+
   $query->execute();
   $books = $query->fetchAll(PDO::FETCH_ASSOC);
+
+  $authorsSql = "SELECT * FROM  author";
+  $authors = $db->query($authorsSql)->fetchAll();
+
+  
   require_once ('deconnect.php');
-   
-  // var_dump($books);    pour vérifier afficher les données
-  // die();        pour stoper le script
+
+  //var_dump($books);    //pour vérifier afficher les données
+  //die();              //pour stoper le script
 
 ?>
 
@@ -31,9 +57,31 @@ session_start();
   <body>
     
         <div class="container">
-            <button class="btn btn-primary my-5"><a href="formulaire.php" class="text-light">Ajouter un livre</a></button>
+            <!-- <button class="btn btn-primary my-2"><a href="formulaire.php" class="text-light">Ajouter un livre</a></button> -->
+            <form action="" method="post">
+              <input type="text" value="<?php if (!empty($_POST['title'])) echo $_POST['title']; ?>" name="title" placeholder="Tire du livre"/>
+              <button type="submit" class="btn btn-secondary my-3" name="submit">Filtrer</button>  
+            <?php 
+              
+              ?>
+              <div class="form-group my-3">
+                <select name="author_id">
+                <?php
+                foreach ($authors as $author) {
+                    echo '<option value="' . $author['id'] . '"';
+                    
+                    if(!empty($_POST['author_id']) && $_POST['author_id'] == $author['id']){
+                      echo ' selected';
+                    }
+                    
+                    echo '>' . $author['firstname'].' '. $author['lastname'] . '</option>';
+                }
+                ?>
+                </select>
+              </div>               
+                
+            </form>
             
-
           <?php
           if(!empty($_SESSION['erreur'])){
               echo '<div class="alert alert-danger" role="alert">
@@ -74,16 +122,19 @@ session_start();
                   <td><?= $book['title'] ?></td>
                   <td><?= $book['date_publi'] ?></td>
                   <td><?= $book['lastname'] ?></td>
-                  <td><a href="details.php?id=<?= $book['id'] ?>">Voir</a></td>
-                  <td><a href="edit.php?id=<?= $book['id'] ?>">Modifier</a></td>
-                  <td><a href="delet.php?id=<?= $book['id'] ?>">Supprimer</a></td>
+                  <td><button class="btn btn-info"><a href="details.php?id=<?= $book['id'] ?>" class="text-light">Voir</a></td>
+                  <td><button class="btn btn-primary"><a href="edit.php?id=<?= $book['id'] ?>" class="text-light">Modifier</a></td>
+                    
+                  <td><button class="btn btn-danger"><a href="delet.php?id=<?= $book['id'] ?>" class="text-light">Supprimer</a></td>
+                  
                 </tr>
                <?php 
               }
           ?>
           </tbody>
           </table>
-            
+
+          <button class="btn btn-primary my-2"><a href="formulaire.php" class="text-light">Ajouter un livre</a></button>  
         </div>
 
   </body>
